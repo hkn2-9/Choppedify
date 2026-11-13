@@ -40,6 +40,41 @@ app.get("/api/tracks", async (req, res) => {
   }
 });
 
+app.get("/api/tracks/:id/reviews", async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT id, rating, comment, created_at FROM reviews WHERE track_id = $1 ORDER BY created_at DESC",
+      [req.params.id]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Could not load reviews" });
+  }
+});
+
+app.post("/api/tracks/:id/reviews", async (req, res) => {
+  const { rating, comment } = req.body;
+  const stars = Number(rating);
+
+  if (!Number.isInteger(stars) || stars < 1 || stars > 5) {
+    return res.status(400).json({ error: "Rating must be 1 to 5" });
+  }
+
+  try {
+    const result = await pool.query(
+      `INSERT INTO reviews (track_id, rating, comment)
+       VALUES ($1, $2, $3)
+       RETURNING id, rating, comment, created_at`,
+      [req.params.id, stars, (comment || "").slice(0, 1000)]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Could not save review" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

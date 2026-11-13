@@ -1,38 +1,337 @@
-.App {
-  text-align: center;
+* {
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  margin: 0;
+  background: #000;
+  color: #fff;
+  font-family: system-ui, sans-serif;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+/* Page layout */
+.app-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
   min-height: 100vh;
+}
+
+.sidebar {
+  background: #000;
+  padding: 24px;
+  border-right: 1px solid #222;
+}
+
+.title {
+  color: #bfa4f3;
+  margin: 0 0 32px;
+  font-size: 24px;
+  text-align: center;
+  font-size: 36px;
+  margin: 24px 0 32px;
+}
+
+.sidebar-nav {
   display: flex;
   flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar-nav a {
+  color: #bbb;
+  text-decoration: none;
+}
+
+.sidebar-nav a:hover {
+  color: #fff;
+}
+
+.main-content {
+  background: #0d0d0d;
+  padding: 32px;
+  min-width: 0;
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+/* Player card */
+.player {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px;
+  background: #121212;
+  border-radius: 12px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.track-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.track {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.track:hover {
+  background: #1f1f1f;
+}
+
+.track.active {
+  background: #bfa4f3;
+  color: #000;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #2a2a2a;
+}
+
+.control-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.play-btn {
+  width: 52px;
+  height: 52px;
+  border: none;
+  border-radius: 50%;
+  background: #bfa4f3;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.1s, background 0.2s;
+}
+
+.play-btn:hover:not(:disabled) {
+  transform: scale(1.08);
+  background: #d4b5f3;
+}
+
+.play-btn:disabled {
+  background: #333;
+  color: #777;
+  cursor: default;
+}
+
+.skip-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.1s, color 0.2s;
+}
+
+.skip-btn:hover:not(:disabled) {
+  transform: scale(1.1);
+  color: #bfa4f3;
+}
+
+.skip-btn:disabled {
+  color: #555;
+  cursor: default;
+}
+
+.now-playing {
+  flex: 1;
+  min-width: 0;
+}
+
+.now-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.seek-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #aaa;
+}
+
+.seek-bar {
+  flex: 1;
+  min-width: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: #444;
+  outline: none;
+}
+
+.seek-bar::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+}
+
+.seek-bar::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border: none;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+}
+
+.reviews {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #2a2a2a;
+}
+
+.reviews-title {
+  margin: 0 0 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.avg-rating {
+  color: #bfa4f3;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.review-input {
+  width: 100%;
+  padding: 10px 12px;
+  background: #1f1f1f;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: #fff;
+  font: inherit;
+  resize: vertical;
+}
+
+.review-input:focus {
+  outline: none;
+  border-color: #bfa4f3;
+}
+
+.star-picker {
+  display: flex;
+  gap: 4px;
+}
+
+.star {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #444;
+  cursor: pointer;
+  padding: 0;
+}
+
+.star.on,
+.star:hover {
+  color: #bfa4f3;
+}
+
+.review-error {
+  color: #ff6b6b;
+  margin: 0;
+  font-size: 14px;
+}
+
+.review-submit {
+  align-self: flex-start;
+  padding: 8px 20px;
+  background: #bfa4f3;
+  color: #000;
+  border: none;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.review-submit:hover {
+  background: #d0b3ff;
+}
+
+.review-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.review {
+  background: #1a1a1a;
+  padding: 12px 14px;
+  border-radius: 8px;
+}
+
+.review-head {
+  display: flex;
+  justify-content: space-between;
+}
+
+.review-stars {
+  color: #bfa4f3;
+}
+
+.review-comment {
+  margin: 8px 0 6px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.review-date {
+  color: #777;
+}
+
+.review-empty {
+  color: #777;
+}
+
+@media (max-width: 700px) {
+  .app-layout {
+    grid-template-columns: 1fr;
   }
-  to {
-    transform: rotate(360deg);
+
+  .sidebar {
+    border-right: none;
+    border-bottom: 1px solid #222;
   }
 }
