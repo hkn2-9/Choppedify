@@ -1,6 +1,7 @@
 const express = require("express");
 const session = require("express-session");
 const cors = require("cors");
+const path = require("path");
 const { Pool } = require("pg");
 const config = require("./config");
 const app = express();
@@ -27,13 +28,15 @@ app.get("/api/hello", (req, res) => {
   res.json({ message: "Server is working" });
 });
 
-app.get("/api/db-test", async (req, res) => {
+app.use("/audio", express.static(path.join(__dirname, "music")));
+
+app.get("/api/tracks", async (req, res) => {
   try {
-    const result = await pool.query("SELECT NOW()");
-    res.json(result.rows[0]);
+    const result = await pool.query("SELECT * FROM tracks ORDER BY title");
+    res.json(result.rows);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Database connection failed" });
+    res.status(500).json({ error: "Could not load tracks" });
   }
 });
 
